@@ -145,23 +145,6 @@ export default function ChatWindow({
 
       {/* Input area */}
       <div className="chat-input-area">
-        {/* Inline Mobile Cart Banner (When items > 0) */}
-        {cartCount > 0 && onViewCart && (
-          <div className="mobile-inline-cart-bar">
-            <div className="mini-cart-info">
-              <span className="mini-cart-count">🛒 {cartCount} item{cartCount > 1 ? 's' : ''} in cart</span>
-              <span className="mini-cart-price">₹{(cartTotal / 100).toFixed(2)}</span>
-            </div>
-            <button
-              className="mini-cart-view-btn"
-              onClick={onViewCart}
-              id="inline-view-cart-btn"
-            >
-              View Cart →
-            </button>
-          </div>
-        )}
-
         {/* Quick chips (Horizontal single-row scrollable) */}
         <div className="quick-chips" role="group" aria-label="Quick message suggestions">
           {QUICK_CHIPS.map(chip => (
