@@ -347,23 +347,6 @@ export default function HomePage() {
 
       {/* Main 2-col grid */}
       <main className={`main-grid mobile-show-${mobileTab}`} id="main-content" style={{ position: 'relative' }}>
-        {/* Floating Mini Cart Bar on Mobile when chatting */}
-        {totalItemCount > 0 && mobileTab === 'chat' && (
-          <div className="mobile-floating-cart-bar">
-            <div className="mini-cart-info">
-              <span className="mini-cart-count">🛒 {totalItemCount} item{totalItemCount > 1 ? 's' : ''}</span>
-              <span className="mini-cart-price">₹{(cartTotal / 100).toFixed(2)}</span>
-            </div>
-            <button
-              className="mini-cart-view-btn"
-              onClick={() => setMobileTab('cart')}
-              id="mobile-view-cart-btn"
-            >
-              View Cart →
-            </button>
-          </div>
-        )}
-
         {/* Decorative floating masala packets behind chat */}
         <div className="spice-bg" aria-hidden="true">
           {BG_PACKETS.map((pkt, i) => (
@@ -405,6 +388,9 @@ export default function HomePage() {
           isLoading={isLoading}
           onSendMessage={sendMessage}
           products={products}
+          cartCount={totalItemCount}
+          cartTotal={cartTotal}
+          onViewCart={() => setMobileTab('cart')}
         />
         <CartPanel
           cart={cart}
