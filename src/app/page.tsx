@@ -5,6 +5,7 @@ import type { Product, CartItem, ChatMessage, ParsedCartItem, AuditEntry } from 
 import { supabase } from '@/lib/supabase';
 import CartPanel from '@/components/CartPanel';
 import ChatWindow from '@/components/ChatWindow';
+import MasalaPacket from '@/components/MasalaPacket';
 
 declare global {
   interface Window {
@@ -31,6 +32,16 @@ interface RazorpayResponse {
   razorpay_payment_id: string;
   razorpay_signature: string;
 }
+
+// Decorative background packets config
+const BG_PACKETS = [
+  { variant: 'red'     as const, size: 90,  top: '8%',  left: '3%',  delay: '0s',    duration: '7s'  },
+  { variant: 'gold'    as const, size: 70,  top: '55%', left: '5%',  delay: '1.5s',  duration: '8.5s' },
+  { variant: 'saffron' as const, size: 80,  top: '30%', left: '88%', delay: '3s',    duration: '6.5s' },
+  { variant: 'green'   as const, size: 60,  top: '72%', left: '85%', delay: '0.8s',  duration: '9s'  },
+  { variant: 'red'     as const, size: 55,  top: '15%', left: '78%', delay: '2.2s',  duration: '7.5s' },
+  { variant: 'gold'    as const, size: 100, top: '60%', left: '45%', delay: '4s',    duration: '10s' },
+];
 
 export default function HomePage() {
   const [products, setProducts]     = useState<Product[]>([]);
@@ -281,6 +292,9 @@ export default function HomePage() {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.product.price_in_paise * item.quantity, 0);
 
+  // Duplicate products array for seamless marquee loop
+  const marqueeProducts = [...products, ...products];
+
   return (
     <div className="page-wrapper">
       {/* Header */}
@@ -295,18 +309,57 @@ export default function HomePage() {
         <span className="header-badge">🧪 Test Mode</span>
       </header>
 
-      {/* Catalog strip */}
-      <div className="catalog-strip" role="navigation" aria-label="Product catalog">
-        {products.map(p => (
-          <div key={p.id} className="catalog-chip">
-            <span aria-hidden="true">{p.image_emoji}</span>
-            {p.name} — ₹{(p.price_in_paise / 100).toFixed(0)}
-          </div>
-        ))}
+      {/* Catalog strip — auto-scrolling marquee */}
+      <div className="catalog-strip-outer" role="navigation" aria-label="Product catalog">
+        <div className="catalog-strip">
+          {marqueeProducts.map((p, idx) => (
+            <div key={`${p.id}-${idx}`} className="catalog-chip">
+              <span aria-hidden="true">{p.image_emoji}</span>
+              {p.name} — ₹{(p.price_in_paise / 100).toFixed(0)}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Main 2-col grid */}
-      <main className="main-grid" id="main-content">
+      <main className="main-grid" id="main-content" style={{ position: 'relative' }}>
+
+        {/* Decorative floating masala packets behind chat */}
+        <div className="spice-bg" aria-hidden="true">
+          {BG_PACKETS.map((pkt, i) => (
+            <div
+              key={i}
+              className="spice-bg-packet"
+              style={{ top: pkt.top, left: pkt.left }}
+            >
+              <MasalaPacket
+                variant={pkt.variant}
+                size={pkt.size}
+                animationDelay={pkt.delay}
+                animationDuration={pkt.duration}
+              />
+            </div>
+          ))}
+
+          {/* Rising spice particle dots */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`particle-${i}`}
+              className="spice-particle"
+              style={{
+                width: `${4 + (i % 3) * 2}px`,
+                height: `${4 + (i % 3) * 2}px`,
+                background: ['#C8280A', '#FF8C00', '#FFE03A', '#D84020'][i % 4],
+                bottom: `${10 + i * 10}%`,
+                left: `${8 + i * 11}%`,
+                opacity: 0.25,
+                animationDelay: `${i * 0.7}s`,
+                animationDuration: `${3 + (i % 3)}s`,
+              }}
+            />
+          ))}
+        </div>
+
         <ChatWindow
           messages={messages}
           isLoading={isLoading}
@@ -343,7 +396,7 @@ export default function HomePage() {
       {paymentSuccess && (
         <div className="payment-success" role="dialog" aria-modal="true" aria-label="Payment successful">
           <div className="success-card">
-            <div className="success-icon">🎉</div>
+            <span className="success-icon">🎉</span>
             <h2>Order Placed!</h2>
             <p>
               Payment of <strong>₹{(paymentSuccess.amount / 100).toFixed(2)}</strong> confirmed.

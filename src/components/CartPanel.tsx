@@ -64,7 +64,93 @@ export default function CartPanel({
       {/* Items */}
       {cart.length === 0 ? (
         <div className="cart-empty" role="status">
-          <div className="cart-empty-icon" aria-hidden="true">🫙</div>
+          {/* Animated masala packets */}
+          <div className="cart-empty-packets" aria-hidden="true">
+            <div style={{
+              display: 'inline-block',
+              animation: 'float-packet 7s ease-in-out infinite',
+              animationDelay: '0s',
+              '--sway-start': '-7deg',
+              '--sway-mid': '0deg',
+              '--sway-end': '7deg',
+            } as React.CSSProperties}>
+              <svg width="58" height="84" viewBox="0 0 80 116" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 6px 16px rgba(200,40,10,0.35))' }}>
+                <defs>
+                  <linearGradient id="ec-body-r" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#8B1A07" /><stop offset="35%" stopColor="#C8280A" /><stop offset="55%" stopColor="#E8401A" /><stop offset="80%" stopColor="#C8280A" /><stop offset="100%" stopColor="#8B1A07" />
+                  </linearGradient>
+                  <linearGradient id="ec-foil-r" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#C8A800" /><stop offset="40%" stopColor="#FFE03A" /><stop offset="60%" stopColor="white" stopOpacity="0.6" /><stop offset="80%" stopColor="#FFE03A" /><stop offset="100%" stopColor="#C8A800" />
+                  </linearGradient>
+                  <clipPath id="ec-clip-r"><path d="M8 14 Q8 6 16 6 L64 6 Q72 6 72 14 L72 102 Q72 110 64 110 L16 110 Q8 110 8 102 Z" /></clipPath>
+                </defs>
+                <path d="M8 14 Q8 6 16 6 L64 6 Q72 6 72 14 L72 102 Q72 110 64 110 L16 110 Q8 110 8 102 Z" fill="url(#ec-body-r)" />
+                <rect x="6" y="4" width="68" height="22" rx="4" fill="url(#ec-foil-r)" />
+                <rect x="6" y="100" width="68" height="14" rx="4" fill="url(#ec-foil-r)" />
+                <rect x="12" y="34" width="56" height="62" rx="5" fill="#FFF8E7" stroke="#FFE03A" strokeWidth="1.5" clipPath="url(#ec-clip-r)" />
+                <text x="40" y="58" textAnchor="middle" fontSize="14">🌶️</text>
+                <text x="40" y="72" textAnchor="middle" fontSize="5.5" fontWeight="bold" fill="#2D1B00" fontFamily="sans-serif">AKSHAYA</text>
+                <text x="40" y="79" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#C8280A" fontFamily="sans-serif">SWADAM</text>
+                <text x="40" y="90" textAnchor="middle" fontSize="4" fill="#5C3D11" fontFamily="sans-serif" fillOpacity="0.7">100g</text>
+              </svg>
+            </div>
+            <div style={{
+              display: 'inline-block',
+              animation: 'float-packet 8.5s ease-in-out infinite',
+              animationDelay: '1.2s',
+              '--sway-start': '5deg',
+              '--sway-mid': '-2deg',
+              '--sway-end': '-9deg',
+            } as React.CSSProperties}>
+              <svg width="48" height="70" viewBox="0 0 80 116" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 6px 16px rgba(212,160,23,0.35))' }}>
+                <defs>
+                  <linearGradient id="ec-body-g" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#9A7010" /><stop offset="35%" stopColor="#D4A017" /><stop offset="55%" stopColor="#F0B820" /><stop offset="80%" stopColor="#D4A017" /><stop offset="100%" stopColor="#9A7010" />
+                  </linearGradient>
+                  <linearGradient id="ec-foil-g" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#8B1A07" /><stop offset="40%" stopColor="#C8280A" /><stop offset="60%" stopColor="white" stopOpacity="0.5" /><stop offset="80%" stopColor="#C8280A" /><stop offset="100%" stopColor="#8B1A07" />
+                  </linearGradient>
+                  <clipPath id="ec-clip-g"><path d="M8 14 Q8 6 16 6 L64 6 Q72 6 72 14 L72 102 Q72 110 64 110 L16 110 Q8 110 8 102 Z" /></clipPath>
+                </defs>
+                <path d="M8 14 Q8 6 16 6 L64 6 Q72 6 72 14 L72 102 Q72 110 64 110 L16 110 Q8 110 8 102 Z" fill="url(#ec-body-g)" />
+                <rect x="6" y="4" width="68" height="22" rx="4" fill="url(#ec-foil-g)" />
+                <rect x="6" y="100" width="68" height="14" rx="4" fill="url(#ec-foil-g)" />
+                <rect x="12" y="34" width="56" height="62" rx="5" fill="#FFF8E7" stroke="#C8280A" strokeWidth="1.5" clipPath="url(#ec-clip-g)" />
+                <text x="40" y="58" textAnchor="middle" fontSize="14">🌿</text>
+                <text x="40" y="72" textAnchor="middle" fontSize="5.5" fontWeight="bold" fill="#2D1B00" fontFamily="sans-serif">AKSHAYA</text>
+                <text x="40" y="79" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#D4A017" fontFamily="sans-serif">SWADAM</text>
+                <text x="40" y="90" textAnchor="middle" fontSize="4" fill="#5C3D11" fontFamily="sans-serif" fillOpacity="0.7">50g</text>
+              </svg>
+            </div>
+            <div style={{
+              display: 'inline-block',
+              animation: 'float-packet 6s ease-in-out infinite',
+              animationDelay: '2.5s',
+              '--sway-start': '-4deg',
+              '--sway-mid': '3deg',
+              '--sway-end': '8deg',
+            } as React.CSSProperties}>
+              <svg width="52" height="76" viewBox="0 0 80 116" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 6px 16px rgba(232,93,4,0.35))' }}>
+                <defs>
+                  <linearGradient id="ec-body-s" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#B04000" /><stop offset="35%" stopColor="#E85D04" /><stop offset="55%" stopColor="#FF7A20" /><stop offset="80%" stopColor="#E85D04" /><stop offset="100%" stopColor="#B04000" />
+                  </linearGradient>
+                  <linearGradient id="ec-foil-s" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#C8A800" /><stop offset="40%" stopColor="#FFE03A" /><stop offset="60%" stopColor="white" stopOpacity="0.6" /><stop offset="80%" stopColor="#FFE03A" /><stop offset="100%" stopColor="#C8A800" />
+                  </linearGradient>
+                  <clipPath id="ec-clip-s"><path d="M8 14 Q8 6 16 6 L64 6 Q72 6 72 14 L72 102 Q72 110 64 110 L16 110 Q8 110 8 102 Z" /></clipPath>
+                </defs>
+                <path d="M8 14 Q8 6 16 6 L64 6 Q72 6 72 14 L72 102 Q72 110 64 110 L16 110 Q8 110 8 102 Z" fill="url(#ec-body-s)" />
+                <rect x="6" y="4" width="68" height="22" rx="4" fill="url(#ec-foil-s)" />
+                <rect x="6" y="100" width="68" height="14" rx="4" fill="url(#ec-foil-s)" />
+                <rect x="12" y="34" width="56" height="62" rx="5" fill="#FFF8E7" stroke="#FFE03A" strokeWidth="1.5" clipPath="url(#ec-clip-s)" />
+                <text x="40" y="58" textAnchor="middle" fontSize="14">🌾</text>
+                <text x="40" y="72" textAnchor="middle" fontSize="5.5" fontWeight="bold" fill="#2D1B00" fontFamily="sans-serif">AKSHAYA</text>
+                <text x="40" y="79" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#E85D04" fontFamily="sans-serif">SWADAM</text>
+                <text x="40" y="90" textAnchor="middle" fontSize="4" fill="#5C3D11" fontFamily="sans-serif" fillOpacity="0.7">75g</text>
+              </svg>
+            </div>
+          </div>
           <h3>Your cart is empty</h3>
           <p>
             Chat with Meena to add your favourite Akshaya Swadam spices!
