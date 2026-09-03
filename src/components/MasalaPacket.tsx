@@ -52,6 +52,8 @@ const VARIANTS = {
   },
 };
 
+import { useId } from 'react';
+
 export default function MasalaPacket({
   size = 80,
   style,
@@ -63,7 +65,8 @@ export default function MasalaPacket({
   const c = VARIANTS[variant];
   const w = size;
   const h = size * 1.45;
-  const id = `pkt-${variant}-${Math.random().toString(36).slice(2, 7)}`;
+  const rawId = useId();
+  const id = `pkt-${variant}-${rawId.replace(/:/g, '')}`;
 
   return (
     <div

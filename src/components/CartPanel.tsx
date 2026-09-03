@@ -47,11 +47,12 @@ export default function CartPanel({
               background: 'none',
               border: 'none',
               fontSize: '0.72rem',
-              color: 'var(--brown-mid)',
+              color: 'rgba(200,150,80,0.75)',
               cursor: 'pointer',
               fontFamily: 'var(--font-main)',
               fontWeight: 600,
               textDecoration: 'underline',
+              textDecorationColor: 'rgba(200,150,80,0.4)',
             }}
             aria-label="Clear all items from cart"
             id="clear-cart-btn"
@@ -159,7 +160,7 @@ export default function CartPanel({
           </p>
         </div>
       ) : (
-        <ul className="cart-items-list" role="list" aria-label="Cart items">
+        <ul className="cart-items-list" data-lenis-prevent role="list" aria-label="Cart items">
           {cart.map(item => (
             <li key={item.product.id} className="cart-item" role="listitem">
               <span className="cart-item-emoji" aria-hidden="true">
@@ -210,20 +211,7 @@ export default function CartPanel({
         </ul>
       )}
 
-      {/* Audit trail */}
-      {auditLog.length > 0 && (
-        <div className="audit-section" aria-label="Audit trail">
-          <h3>🔍 Audit Trail</h3>
-          {auditLog.map((entry, i) => (
-            <div key={i} className="audit-entry" role="note">
-              <strong>{new Date(entry.timestamp).toLocaleTimeString('en-IN')}</strong>
-              {' · '}{entry.action}
-              {' · '}Server-validated: <strong>₹{(entry.serverValidatedAmount / 100).toFixed(2)}</strong>
-              {' · '}{entry.aiItems.length} item(s)
-            </div>
-          ))}
-        </div>
-      )}
+
 
       {/* Footer / checkout */}
       {cart.length > 0 && (
@@ -266,7 +254,7 @@ export default function CartPanel({
           <p style={{
             textAlign: 'center',
             fontSize: '0.68rem',
-            color: 'var(--brown-light)',
+            color: 'rgba(160,130,70,0.65)',
             marginTop: 8,
           }}>
             🔒 Secured by Razorpay · Test Mode · No real charges

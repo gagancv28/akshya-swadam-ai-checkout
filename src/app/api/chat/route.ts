@@ -13,9 +13,9 @@ function getDb() {
 }
 
 // ── Resilience: Exponential backoff with jitter ───────────────
-const RETRY_DELAYS_MS = [2000, 4000]; // 2s → 4s (3 total attempts)
-const PRIMARY_MODEL   = 'gemini-3.6-flash';
-const FALLBACK_MODEL  = 'gemini-2.0-flash-lite'; // backup when primary is overloaded
+const RETRY_DELAYS_MS = [1000]; // 1s retry delay
+const PRIMARY_MODEL   = 'gemini-3.5-flash-lite';
+const FALLBACK_MODEL  = 'gemini-3.6-flash';
 
 function is503(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
@@ -46,8 +46,8 @@ async function callGeminiWithResilience(
   prompt: string
 ): Promise<string> {
   const config = {
-    temperature: 0.1,
-    maxOutputTokens: 2048,
+    temperature: 0.05,
+    maxOutputTokens: 512,
     responseMimeType: 'application/json',
   };
 
@@ -175,9 +175,9 @@ export async function POST(req: NextRequest) {
 
     const history = (conversationHistory || [])
       .filter((m: { role: string }) => m.role === 'user' || m.role === 'assistant')
-      .slice(-6)
+      .slice(-4)
       .map((m: { role: string; content: string }) =>
-        `${m.role === 'user' ? 'Customer' : 'Meena'}: ${m.content}`
+        `${m.role === 'user' ? 'Customer' : 'Meena'}: ${m.content.slice(0, 120)}`
       )
       .join('\n');
 
@@ -207,8 +207,8 @@ export async function POST(req: NextRequest) {
           model: FALLBACK_MODEL,
           contents: prompt,
           config: {
-            temperature: 0.1,
-            maxOutputTokens: 2048,
+            temperature: 0.05,
+            maxOutputTokens: 512,
             responseMimeType: 'application/json',
           },
         });

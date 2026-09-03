@@ -20,12 +20,34 @@ const QUICK_CHIPS = [
 
 export default function ChatWindow({ messages, isLoading, onSendMessage, products }: Props) {
   const [inputText, setInputText] = useState('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef    = useRef<HTMLTextAreaElement>(null);
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
+  const textareaRef     = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom
+  // Butter-smooth animated scroll to bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = chatMessagesRef.current;
+    if (!el) return;
+
+    const start = el.scrollTop;
+    const target = el.scrollHeight - el.clientHeight;
+    const change = target - start;
+    if (Math.abs(change) < 2) return;
+
+    const duration = 450; // ms
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutCubic deceleration curve
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      el.scrollTop = start + change * easeProgress;
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   }, [messages, isLoading]);
 
   // Auto-resize textarea
@@ -69,7 +91,14 @@ export default function ChatWindow({ messages, isLoading, onSendMessage, product
       </div>
 
       {/* Messages */}
-      <div className="chat-messages" role="log" aria-live="polite" aria-label="Conversation">
+      <div
+        ref={chatMessagesRef}
+        className="chat-messages"
+        data-lenis-prevent
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation"
+      >
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -88,7 +117,6 @@ export default function ChatWindow({ messages, isLoading, onSendMessage, product
                   </span>
                 ))}
               </div>
-              <div className="message-time">{formatTime(msg.timestamp)}</div>
             </div>
           </div>
         ))}
@@ -102,8 +130,6 @@ export default function ChatWindow({ messages, isLoading, onSendMessage, product
             </div>
           </div>
         )}
-
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input area */}

@@ -142,7 +142,7 @@ export default function HomePage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: text,
-            conversationHistory: messages.slice(-8).map(m => ({
+            conversationHistory: messages.slice(-6).map(m => ({
               role: m.role,
               content: m.content,
             })),
@@ -292,6 +292,9 @@ export default function HomePage() {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.product.price_in_paise * item.quantity, 0);
 
+  const [mobileTab, setMobileTab]   = useState<'chat' | 'cart'>('chat');
+  const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   // Duplicate products array for seamless marquee loop
   const marqueeProducts = [...products, ...products];
 
@@ -321,8 +324,45 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Mobile Tab Bar (< 768px) */}
+      <nav className="mobile-tab-bar" aria-label="Mobile navigation">
+        <button
+          className={`mobile-tab-btn ${mobileTab === 'chat' ? 'active' : ''}`}
+          onClick={() => setMobileTab('chat')}
+          aria-label="Chat assistant tab"
+        >
+          💬 Chat Guide
+        </button>
+        <button
+          className={`mobile-tab-btn ${mobileTab === 'cart' ? 'active' : ''}`}
+          onClick={() => setMobileTab('cart')}
+          aria-label="Cart tab"
+        >
+          🛒 Cart
+          {totalItemCount > 0 && (
+            <span className="mobile-cart-badge">{totalItemCount}</span>
+          )}
+        </button>
+      </nav>
+
       {/* Main 2-col grid */}
-      <main className="main-grid" id="main-content" style={{ position: 'relative' }}>
+      <main className={`main-grid mobile-show-${mobileTab}`} id="main-content" style={{ position: 'relative' }}>
+        {/* Floating Mini Cart Bar on Mobile when chatting */}
+        {totalItemCount > 0 && mobileTab === 'chat' && (
+          <div className="mobile-floating-cart-bar">
+            <div className="mini-cart-info">
+              <span className="mini-cart-count">🛒 {totalItemCount} item{totalItemCount > 1 ? 's' : ''}</span>
+              <span className="mini-cart-price">₹{(cartTotal / 100).toFixed(2)}</span>
+            </div>
+            <button
+              className="mini-cart-view-btn"
+              onClick={() => setMobileTab('cart')}
+              id="mobile-view-cart-btn"
+            >
+              View Cart →
+            </button>
+          </div>
+        )}
 
         {/* Decorative floating masala packets behind chat */}
         <div className="spice-bg" aria-hidden="true">
