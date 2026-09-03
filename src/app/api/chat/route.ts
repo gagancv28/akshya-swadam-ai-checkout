@@ -65,11 +65,23 @@ ${(conversationHistory || [])
 
 Customer: ${message}
 
-Respond with ONLY this JSON (no other text):
-{"intent":"add_to_cart","items":[{"product_id":"<uuid>","quantity":<number>}],"message":"<your reply>","confidence":0.9}
+STRICT OUTPUT RULES:
+- Return ONLY a single JSON object. No markdown. No prose. No extra keys.
+- The JSON MUST be complete and valid — never truncate mid-object.
+- For multiple items, include ALL of them in the items array.
 
-Intent options: "add_to_cart" | "remove_from_cart" | "view_cart" | "checkout" | "other"
-For greetings/questions use "other" and empty items array.`;
+JSON SCHEMA (always return exactly this shape):
+{
+  "intent": "add_to_cart" | "remove_from_cart" | "view_cart" | "checkout" | "other",
+  "items": [
+    { "product_id": "<exact-uuid-from-catalog>", "quantity": <positive-integer> },
+    { "product_id": "<exact-uuid-from-catalog>", "quantity": <positive-integer> }
+  ],
+  "message": "<your warm friendly reply in 1-2 sentences>",
+  "confidence": <0.0-1.0>
+}
+
+For greetings/questions: intent="other", items=[]`;
 
     // ── 3. Call Gemini via new @google/genai SDK ─────────────
     const geminiKey = process.env.GEMINI_API_KEY;
@@ -87,32 +99,50 @@ For greetings/questions use "other" and empty items array.`;
       model: 'gemini-3.6-flash',
       contents: prompt,
       config: {
-        temperature: 0.2,
-        maxOutputTokens: 1024,
-        responseMimeType: 'application/json',
+        temperature: 0.1,          // Lower = more deterministic JSON output
+        maxOutputTokens: 2048,     // Large enough for full multi-item responses
+        responseMimeType: 'application/json', // Forces complete, valid JSON
       },
     });
 
     const rawText = response.text?.trim() ?? '';
+    console.log('[Gemini raw]', rawText.slice(0, 200)); // Debug: first 200 chars
 
     // ── 4. Parse JSON response ───────────────────────────────
+    // Step 1: Strip any accidental markdown fences Gemini might add
+    const stripped = rawText
+      .replace(/^```json\s*/i, '')   // leading ```json
+      .replace(/^```\s*/i, '')       // leading ```
+      .replace(/\s*```\s*$/,  '')    // trailing ```
+      .replace(/^`|`$/g, '')         // single backticks
+      .trim();
+
     let geminiResponse: GeminiCartResponse;
     try {
-      const cleaned = rawText
-        .replace(/^```json\s*/i, '')
-        .replace(/^```\s*/i, '')
-        .replace(/\s*```$/, '')
-        .trim();
-      geminiResponse = JSON.parse(cleaned);
-    } catch {
-      console.error('Gemini JSON parse failed. Raw:', rawText);
-      // Try to rescue just the message field via regex
-      const msgMatch = rawText.match(/"message"\s*:\s*"((?:[^"\\]|\\.)*?)"/);
-      const rescuedMsg = msgMatch?.[1]?.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+      geminiResponse = JSON.parse(stripped);
+
+      // Validate required fields exist
+      if (!geminiResponse.intent || !Array.isArray(geminiResponse.items)) {
+        throw new Error('Missing required fields: intent or items');
+      }
+    } catch (parseErr) {
+      console.error('Gemini JSON parse failed:', parseErr);
+      console.error('Raw (first 500 chars):', rawText.slice(0, 500));
+
+      // Step 2: Regex rescue — try to extract the message field even from truncated JSON
+      const msgMatch = stripped.match(/"message"\s*:\s*"((?:[^"\\]|\\.)*?)"/);
+      const rescuedMsg = msgMatch?.[1]
+        ?.replace(/\\n/g, '\n')
+        .replace(/\\"/g, '"')
+        .replace(/\\'/g, "'");
+
+      // Step 3: Clean graceful fallback — never show raw JSON to the user
       return NextResponse.json({
-        intent: 'other', items: [],
-        message: rescuedMsg || "Namaskaram! 🙏 I had a small glitch. Could you repeat your order?",
-        serverValidatedAmount: 0, auditEntry: null,
+        intent: 'other',
+        items: [],
+        message: rescuedMsg || 'Namaskaram! 🙏 I had a small glitch understanding that. Could you repeat your order?',
+        serverValidatedAmount: 0,
+        auditEntry: null,
       });
     }
 
