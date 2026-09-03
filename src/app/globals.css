@@ -1323,79 +1323,173 @@ html, body {
   transform: scale(0.95);
 }
 
-/* ── Responsive ──────────────────────────────────────────────── */
+/* ── Responsive Mobile Optimizations ──────────────────────────── */
 @media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    max-height: none;
+    overflow: auto;
+    background-color: #140E06;
+  }
+
+  .page-wrapper {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #140E06;
+  }
+
   .site-header {
-    height: 60px;
-    padding: 0 14px;
+    height: 56px;
+    padding: 0 12px;
+    flex-shrink: 0;
   }
+
   .header-logo {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
   }
+
   .header-title h1 {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
   }
+
   .header-title span {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
+
   .header-badge {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     padding: 3px 8px;
   }
 
   .catalog-strip-outer {
-    height: 38px;
+    height: 36px;
+    flex-shrink: 0;
   }
 
   .mobile-tab-bar {
     display: flex;
-  }
-
-  .mobile-floating-cart-bar {
-    display: flex;
+    height: 44px;
+    flex-shrink: 0;
+    background: #140E06;
   }
 
   .main-grid {
     grid-template-columns: 1fr;
-    height: calc(100dvh - 60px - 38px - 48px);
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    overflow: hidden;
+    background: #140E06;
+  }
+
+  /* ── Mobile Chat Panel View ── */
+  .main-grid.mobile-show-chat .chat-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    border-right: none;
     overflow: hidden;
   }
 
-  .main-grid.mobile-show-chat .chat-panel {
-    display: flex;
-    height: 100%;
-    border-right: none;
-  }
   .main-grid.mobile-show-chat .cart-panel {
     display: none;
   }
 
+  .chat-messages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    padding: 14px 16px 20px 16px;
+  }
+
+  .chat-input-area {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 25;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF8E7 100%);
+    border-top: 1px solid var(--cream-dark);
+    padding: 10px 12px max(12px, env(safe-area-inset-bottom)) 12px;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  }
+
+  .mobile-floating-cart-bar {
+    display: flex;
+    position: absolute;
+    bottom: 125px;
+    left: 12px;
+    right: 12px;
+    z-index: 90;
+  }
+
+  /* ── Mobile Cart Panel View ── */
   .main-grid.mobile-show-cart .chat-panel {
     display: none;
   }
+
   .main-grid.mobile-show-cart .cart-panel {
     display: flex;
+    flex-direction: column;
     height: 100%;
+    min-height: 0;
+    flex: 1;
+    background: var(--cart-bg-1);
+    overflow: hidden;
+  }
+
+  .cart-empty {
+    flex: 1;
+    min-height: 0;
+    padding: 30px 20px;
+    background: transparent;
+  }
+
+  .cart-items-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    padding: 12px 14px 20px 14px;
+  }
+
+  .cart-footer {
+    flex-shrink: 0;
+    padding: 14px 16px max(16px, env(safe-area-inset-bottom)) 16px;
+    background: #140E06;
+    border-top: 1px solid rgba(200,150,26,0.3);
   }
 
   /* Touch optimizations */
   .chat-input {
     font-size: 16px; /* Prevents auto-zoom on iOS safari */
-    padding: 12px 14px;
+    padding: 10px 12px;
+    min-height: 44px;
   }
+
   .send-btn {
     width: 44px;
     height: 44px;
   }
+
   .qty-btn {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     font-size: 16px;
   }
+
   .pay-btn {
-    padding: 16px;
+    padding: 15px;
     font-size: 1rem;
+    min-height: 48px;
   }
 }
